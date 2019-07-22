@@ -1,0 +1,9 @@
+ClusterEvent_CL
+| project TimeGenerated, type_s, cluster_id_s, details_current_num_workers_d, details_target_num_workers_d
+| where TimeGenerated > todatetime('2019-05-01T00:00:00.000')
+| where type_s == "RUNNING" 
+| join (ClusterEvent_CL 
+            | where type_s == "CREATING"
+            | project cluster_id_s, details_attributes_driver_node_type_id_s, details_attributes_node_type_id_s, details_attributes_cluster_source_s, details_attributes_autotermination_minutes_d, details_cluster_size_autoscale_min_workers_d, details_cluster_size_autoscale_max_workers_d)
+        on cluster_id_s    
+| project TimeGenerated, type_s, cluster_id_s, details_attributes_driver_node_type_id_s, details_attributes_node_type_id_s, details_attributes_cluster_source_s,  details_current_num_workers_d, details_target_num_workers_d, details_attributes_autotermination_minutes_d, details_cluster_size_autoscale_min_workers_d, details_cluster_size_autoscale_max_workers_d
